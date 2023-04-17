@@ -1,9 +1,12 @@
+import common.BaseThread;
+
 /**
  * Class Philosopher.
  * Outlines main subrutines of our virtual philosopher.
  *
  * @author Serguei A. Mokhov, mokhov@cs.concordia.ca
  */
+
 public class Philosopher extends BaseThread
 {
     /**
@@ -23,11 +26,11 @@ public class Philosopher extends BaseThread
     {
         try
         {
-            System.out.println("Philosopher " + getTID() + " started eating.");
+            System.out.println("Philosopher " + (getTID()+1) + " started eating.");
             Thread.yield(); //give chance for other threads to yield
             sleep((long)(Math.random() * TIME_TO_WASTE));
             Thread.yield();
-            System.out.println("Philosopher " + getTID() + " done eating.");
+            System.out.println("Philosopher " + (getTID()+1) + " done eating.");
 
         }
         catch(InterruptedException e)
@@ -50,11 +53,11 @@ public class Philosopher extends BaseThread
     {
         try
         {
-            System.out.println("Philosopher " + getTID() + " started thinking.");
+            System.out.println("Philosopher " + (getTID()+1) + " started thinking.");
             Thread.yield(); //give chance for other threads to yield
             sleep((long)(Math.random() * TIME_TO_WASTE));
             Thread.yield();
-            System.out.println("Philosopher " + getTID() + " done thinking.");
+            System.out.println("Philosopher " + (getTID()+1) + " done thinking.");
 
         }
         catch(InterruptedException e)
@@ -75,17 +78,18 @@ public class Philosopher extends BaseThread
      */
     public void talk()
     {
-        System.out.println("Philosopher " + getTID() + " started talking.");
+        System.out.println("Philosopher " + (getTID()+1) + " started talking.");
         Thread.yield();
         saySomething();
         Thread.yield();
-        System.out.println("Philosopher " + getTID() + " is done talking.");
+        System.out.println("Philosopher " + (getTID()+1) + " is done talking.");
 
     }
 
     /**
      * No, this is not the act of running, just the overridden Thread.run()
      */
+    @Override
     public void run()
     {
         for(int i = 0; i < DiningPhilosophers.DINING_STEPS; i++)
@@ -111,7 +115,6 @@ public class Philosopher extends BaseThread
                 DiningPhilosophers.soMonitor.endTalk();
                 // ...
             }
-
             Thread.yield();
         }
     } // run()
@@ -120,6 +123,7 @@ public class Philosopher extends BaseThread
      * Prints out a phrase from the array of phrases at random.
      * Feel free to add your own phrases.
      */
+
     public void saySomething()
     {
         String[] astrPhrases =
@@ -128,12 +132,12 @@ public class Philosopher extends BaseThread
                         "You know, true is false and false is true if you think of it",
                         "2 + 2 = 5 for extremely large values of 2...",
                         "If thee cannot speak, thee must be silent",
-                        "My number is " + getTID() + ""
+                        "My number is " + (getTID()+1) + ""
                 };
 
         System.out.println
                 (
-                        "Philosopher " + getTID() + " says: " +
+                        "Philosopher " + (getTID()+1) + " says: " +
                                 astrPhrases[(int)(Math.random() * astrPhrases.length)]
                 );
     }

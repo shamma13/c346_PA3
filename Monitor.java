@@ -15,10 +15,10 @@ public class Monitor
      */
     private enum status{thinking,hungry,eating};
     private int numofchop;
-    private boolean talking;
-    private status state[];
+    private boolean talking = false;
+private status state[];
 
-    private Condition self[]; //synchronization primitive that provides a queue for threads waiting for resource
+private Condition self[]; //synchronization primitive that provides a queue for threads waiting for resource
 
     /**
      * Constructor
@@ -26,18 +26,16 @@ public class Monitor
     public Monitor(int piNumberOfPhilosophers)
     {
         // TODO: set appropriate number of chopsticks based on the # of philosophers
-        this.numofchop = piNumberOfPhilosophers;
+        numofchop = piNumberOfPhilosophers;
         state = new status[piNumberOfPhilosophers];
-        Condition self[] = new Condition[piNumberOfPhilosophers];
+//        self = new Condition[piNumberOfPhilosophers];
 
         //initializing chopstick as condition
-//        for (int j = 0; j < piNumberOfPhilosophers; i++)
-//            self [i] = lock.newCondition(); //lock object will coordinate access to shared state and ensure that condition is checked atomically
-
+//        for (int j = 0; j < piNumberOfPhilosophers; j++)
+//            self[j] = lock.newCondition(); //lock object will coordinate access to shared state and ensure that condition is checked atomically
         for(int i = 0; i < piNumberOfPhilosophers; i++)
             state[i] = status.thinking;
 
-        talking = false;
     }
 
 
@@ -56,13 +54,14 @@ public class Monitor
         try {
             state[piTID] = status.hungry;
             test(piTID);
-            if (state[piTID] != status.eating)
-                self[piTID].wait(); //wait for signal;
+            while (state[piTID] != status.eating)
+               wait(); //wait for signal;
         }
         catch(InterruptedException e) {
             Thread.currentThread().interrupt();
             System.out.println("Failed to pick up chopstick for philosopher " + piTID);
         }
+
     }
 
     /**
@@ -82,16 +81,17 @@ public class Monitor
      */
     public synchronized void requestTalk()
     {
-        while (talking) { //many philosophers can want to talk but only one should be allowed to speak
+         //many philosophers can want to talk but only one should be allowed to speak
             try {
-                wait();
+                while (talking) {
+                    wait();
+                }
+                talking = true;
 //                requestTalk();
             }
             catch(InterruptedException e) {
                 System.out.println("Philosopher can't talk someone else is speaking");
             }
-            talking = true;
-        }
 
     }
 
@@ -109,7 +109,8 @@ public class Monitor
     {
         if (state[(piTID + numofchop-1) % numofchop] != status.eating && state[piTID] == status.hungry && state[(piTID + 1) % numofchop] != status.eating) {
             state[piTID] = status.eating;
-            self[piTID].notifyAll();
+            notifyAll();
+//            notifyAll();
         }
     }
 }

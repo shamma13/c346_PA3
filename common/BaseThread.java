@@ -1,7 +1,8 @@
+
 import java.util.Random;
 
 /**
- * Class BaseThread
+ * Class commonn.BaseThread
  * Simply one customized base class for many of our own threads.
  *
  * An attempt to maintain an automatic unique TID (thread ID)
@@ -24,7 +25,7 @@ public class BaseThread extends Thread
     /**
      * Preserves value across all instances
      */
-    public static int siNextTID = 1;
+    public static int siNextTID = 0;
 
     /**
      * Our Thread ID

@@ -4,6 +4,7 @@
  *
  * @author Serguei A. Mokhov, mokhov@cs.concordia.ca
  */
+
 public class DiningPhilosophers
 {
     /*
@@ -49,10 +50,27 @@ public class DiningPhilosophers
             int iPhilosophers = DEFAULT_NUMBER_OF_PHILOSOPHERS;
 
             // Make the monitor aware of how many philosophers there are
+
+            if (argv.length > 0) {
+                try {
+                    iPhilosophers = Integer.parseInt(argv[0]);
+                    if (iPhilosophers <= 0) {
+                        throw new NumberFormatException();
+                    }
+                } catch (NumberFormatException e) {
+                    System.err.println("\"" + argv[0] + "\" is not a positive decimal integer\n");
+                    System.err.println("\nUsage: java DiningPhilosophers " + "[" + iPhilosophers + "]");
+                    System.exit(1);
+                }
+            }
+
             soMonitor = new Monitor(iPhilosophers);
 
             // Space for all the philosophers
             Philosopher aoPhilosophers[] = new Philosopher[iPhilosophers];
+
+            System.out.println
+                    ("\n" + iPhilosophers + " philosopher(s) came in for a dinner.\n");
 
             // Let 'em sit down
             for(int j = 0; j < iPhilosophers; j++)
@@ -61,18 +79,13 @@ public class DiningPhilosophers
                 aoPhilosophers[j].start();
             }
 
-            System.out.println
-                    (
-                            iPhilosophers +
-                                    " philosopher(s) came in for a dinner."
-                    );
 
             // Main waits for all its children to die...
             // I mean, philosophers to finish their dinner.
             for(int j = 0; j < iPhilosophers; j++)
                 aoPhilosophers[j].join();
 
-            System.out.println("All philosophers have left. System terminates normally.");
+            System.out.println("All philosophers have left. System terminates normally.\n");
         }
         catch(InterruptedException e)
         {
